@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpException,
+  HttpStatus,
   Inject,
   Post,
   UsePipes,
@@ -9,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from '../../services/user/user.service';
 import { CreateUserDto } from '../../dtos/CreateUser.dto';
+import { UserEntity } from 'src/typeorm';
 
 @Controller('user')
 export class UserController {
@@ -18,7 +21,16 @@ export class UserController {
 
   @Post('create')
   @UsePipes(ValidationPipe)
-  createUser(@Body() createUserDto: CreateUserDto) {
-    return this.userService.createUser(createUserDto);
+  async createUser(
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<string | HttpException> {
+    const user = await this.userService.createUser(createUserDto);
+
+    if (user instanceof UserEntity) return 'Ekleme işlemi başarılı.';
+
+    throw new HttpException(
+      'Kullanıcı ekleme işlemi başarısız!',
+      HttpStatus.BAD_REQUEST,
+    );
   }
 }
