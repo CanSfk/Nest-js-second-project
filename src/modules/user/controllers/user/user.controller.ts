@@ -1,10 +1,13 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpException,
-  HttpStatus,
   Inject,
+  Param,
+  ParseIntPipe,
+  Patch,
   Post,
   UsePipes,
   ValidationPipe,
@@ -27,10 +30,32 @@ export class UserController {
     const user = await this.userService.createUser(createUserDto);
 
     if (user instanceof UserEntity) return 'Ekleme işlemi başarılı.';
+  }
 
-    throw new HttpException(
-      'Kullanıcı ekleme işlemi başarısız!',
-      HttpStatus.BAD_REQUEST,
-    );
+  @Patch('update/:id')
+  @UsePipes(ValidationPipe)
+  async updateUser(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<string | HttpException> {
+    const updatedUser = await this.userService.updateUser(id, createUserDto);
+
+    if (updatedUser instanceof UserEntity) return 'Güncelleme işlemi başarılı.';
+  }
+
+  @Get(':id')
+  async getUserById(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<UserEntity> {
+    return await this.userService.getUserById(id);
+  }
+
+  @Delete('delete/:id')
+  async userDelete(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<string | HttpException> {
+    const result = await this.userService.deleteUser(id);
+
+    if (result) return 'Silme işlemi başarılı.';
   }
 }
