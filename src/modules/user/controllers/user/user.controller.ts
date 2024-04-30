@@ -22,6 +22,11 @@ export class UserController {
     @Inject('USER_SERVICE') private readonly userService: UserService,
   ) {}
 
+  @Get('')
+  async getAllUser(): Promise<UserEntity[]> {
+    return await this.userService.getAllUser();
+  }
+
   @Post('create')
   @UsePipes(ValidationPipe)
   async createUser(

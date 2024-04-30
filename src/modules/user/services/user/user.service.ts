@@ -9,6 +9,10 @@ export class UserService {
     @Inject('USER_REPOSITORY') private readonly userRepository: UserRepository,
   ) {}
 
+  async getAllUser(): Promise<UserEntity[]> {
+    return await this.userRepository.findAll();
+  }
+
   async createUser(createUserDto: CreateUserDto): Promise<UserEntity> {
     return await this.userRepository.create(createUserDto);
   }
