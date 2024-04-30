@@ -1,17 +1,19 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   HttpCode,
   HttpStatus,
   Inject,
   Post,
   UnauthorizedException,
+  UseInterceptors,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from '../../services/auth/auth.service';
 import { SignInDto } from '../../dtos/SignIn.dto';
-import { UserEntity } from 'src/typeorm';
+import { SerializedUser } from 'src/modules/user/types';
 
 @Controller('auth')
 export class AuthController {
@@ -19,12 +21,13 @@ export class AuthController {
     @Inject('AUTH_SERVICE') private readonly authService: AuthService,
   ) {}
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @HttpCode(HttpStatus.OK)
   @UsePipes(ValidationPipe)
   @Post('login')
   async signIn(
     @Body() signInDto: SignInDto,
-  ): Promise<UserEntity | UnauthorizedException> {
+  ): Promise<SerializedUser | UnauthorizedException> {
     return await this.authService.signIn(
       signInDto.userName,
       signInDto.password,

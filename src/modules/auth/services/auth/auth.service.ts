@@ -1,5 +1,6 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from 'src/modules/user/services/user/user.service';
+import { SerializedUser } from 'src/modules/user/types';
 import { UserEntity } from 'src/typeorm';
 
 @Injectable()
@@ -8,10 +9,10 @@ export class AuthService {
     @Inject('USER_SERVICE') private readonly userService: UserService,
   ) {}
 
-  async signIn(userName: string, password: string): Promise<UserEntity> {
+  async signIn(userName: string, password: string): Promise<SerializedUser> {
     const user = await this.userService.findUserValidate(userName);
 
-    if (user && user?.password === password) return user;
+    if (user && user?.password === password) return new SerializedUser(user);
 
     throw new UnauthorizedException();
   }
