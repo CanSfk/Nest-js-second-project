@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -9,12 +10,14 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UseInterceptors,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { UserService } from '../../services/user/user.service';
 import { CreateUserDto } from '../../dtos/CreateUser.dto';
 import { UserEntity } from 'src/typeorm';
+import { SerializedUser } from '../../types';
 
 @Controller('user')
 export class UserController {
@@ -22,8 +25,9 @@ export class UserController {
     @Inject('USER_SERVICE') private readonly userService: UserService,
   ) {}
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get('')
-  async getAllUser(): Promise<UserEntity[]> {
+  async getAllUser(): Promise<SerializedUser[]> {
     return await this.userService.getAllUser();
   }
 

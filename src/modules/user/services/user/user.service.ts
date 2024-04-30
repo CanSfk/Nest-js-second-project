@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { CreateUserDto } from '../../dtos/CreateUser.dto';
 import { UserEntity } from 'src/typeorm';
 import { UserRepository } from '../../repositories/user.repository';
+import { SerializedUser } from '../../types';
 
 @Injectable()
 export class UserService {
@@ -9,8 +10,10 @@ export class UserService {
     @Inject('USER_REPOSITORY') private readonly userRepository: UserRepository,
   ) {}
 
-  async getAllUser(): Promise<UserEntity[]> {
-    return await this.userRepository.findAll();
+  async getAllUser(): Promise<SerializedUser[]> {
+    const data = await this.userRepository.findAll();
+
+    return data.map((dt) => new SerializedUser(dt));
   }
 
   async createUser(createUserDto: CreateUserDto): Promise<UserEntity> {
