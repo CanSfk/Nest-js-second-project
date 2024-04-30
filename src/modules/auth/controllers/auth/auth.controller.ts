@@ -2,10 +2,12 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Inject,
   Post,
+  Session,
   UnauthorizedException,
   UseInterceptors,
   UsePipes,
@@ -32,5 +34,13 @@ export class AuthController {
       signInDto.userName,
       signInDto.password,
     );
+  }
+
+  @Get('')
+  async getAuthSession(@Session() session: Record<string, any>) {
+    console.log(session);
+    console.log(session.id);
+    session.authenticated = true;
+    return session;
   }
 }
