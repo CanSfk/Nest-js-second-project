@@ -12,4 +12,8 @@ export class UserRepository extends BaseCrudRepository<UserEntity> {
   ) {
     super(userRepository, 'Kullanıcı');
   }
+
+  async findUserValidate(userName: string): Promise<UserEntity | null> {
+    return await this.userRepository.findOneBy({ userName });
+  }
 }
