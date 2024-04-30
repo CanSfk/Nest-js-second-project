@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcrypt';
 
-export function encodePassword(rawPassword: string) {
+export function encodePassword(rawPassword: string): string {
   // ?? genSaltSync() fonksiyonu bcrypt algoritması için kullanılan rastgele tuz (salt) oluşturur.
   // ?? Bu tuz her şifre için benzersiz bir değer oluşturur.
   // ?? Bu sayede aynı şifreye sahip kullanıcılar için farklı hash değerleri oluşturulur.
@@ -12,3 +12,10 @@ export function encodePassword(rawPassword: string) {
   return bcrypt.hashSync(rawPassword, SALT);
 }
 
+// ?? Kullanıcının girmiş olduğu şifre ile veri tabanında hash olarak tutulan şifre karşılaştırılıyor.
+export function comparePasswords(
+  rawPassword: string,
+  hashPassword: string,
+): boolean {
+  return bcrypt.compareSync(rawPassword, hashPassword);
+}
