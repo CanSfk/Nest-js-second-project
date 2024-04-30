@@ -3,6 +3,7 @@ import { CreateUserDto } from '../../dtos/CreateUser.dto';
 import { UserEntity } from 'src/typeorm';
 import { UserRepository } from '../../repositories/user.repository';
 import { SerializedUser } from '../../types';
+import { encodePassword } from 'src/utils/Bcrypt';
 
 @Injectable()
 export class UserService {
@@ -17,6 +18,10 @@ export class UserService {
   }
 
   async createUser(createUserDto: CreateUserDto): Promise<UserEntity> {
+    const hashingPassword = encodePassword(createUserDto.password);
+
+    createUserDto.password = hashingPassword;
+
     return await this.userRepository.create(createUserDto);
   }
 
