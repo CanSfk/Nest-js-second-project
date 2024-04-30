@@ -9,6 +9,7 @@ import {
   Post,
   Session,
   UnauthorizedException,
+  UseGuards,
   UseInterceptors,
   UsePipes,
   ValidationPipe,
@@ -16,6 +17,7 @@ import {
 import { AuthService } from '../../services/auth/auth.service';
 import { SignInDto } from '../../dtos/SignIn.dto';
 import { SerializedUser } from 'src/modules/user/types';
+import { AuthenticatedGuard, LocalAuthGuard } from '../../utils/LocalGuard';
 
 @Controller('auth')
 export class AuthController {
@@ -23,6 +25,7 @@ export class AuthController {
     @Inject('AUTH_SERVICE') private readonly authService: AuthService,
   ) {}
 
+  @UseGuards(LocalAuthGuard)
   @UseInterceptors(ClassSerializerInterceptor)
   @HttpCode(HttpStatus.OK)
   @UsePipes(ValidationPipe)
@@ -36,6 +39,7 @@ export class AuthController {
     );
   }
 
+  @UseGuards(AuthenticatedGuard)
   @Get('')
   async getAuthSession(@Session() session: Record<string, any>) {
     console.log(session);

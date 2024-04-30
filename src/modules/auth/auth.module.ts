@@ -5,6 +5,8 @@ import { UserService } from '../user/services/user/user.service';
 import { UserRepository } from '../user/repositories/user.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from 'src/typeorm';
+import { SessionSerializer } from './utils/SessionSerializer';
+import { LocalStrategy } from './utils/LocalStrategy';
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity])],
@@ -22,6 +24,8 @@ import { UserEntity } from 'src/typeorm';
       provide: 'USER_REPOSITORY',
       useClass: UserRepository,
     },
+    SessionSerializer,
+    LocalStrategy,
   ],
 })
 export class AuthModule {}

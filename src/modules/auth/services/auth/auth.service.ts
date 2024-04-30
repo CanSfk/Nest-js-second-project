@@ -10,6 +10,8 @@ export class AuthService {
   ) {}
 
   async signIn(userName: string, password: string): Promise<SerializedUser> {
+    console.log('Inside validate user auth.service');
+
     const user = await this.userService.findUserValidate(userName);
 
     if (user) {

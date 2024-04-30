@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as session from 'express-session';
+import * as passport from 'passport';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -26,6 +27,12 @@ async function bootstrap() {
       },
     }),
   );
+
+  // ?? Passportjs kütüphanesini başlatır ve gerekli konfigürasyonları yükler.
+  app.use(passport.initialize());
+
+  // ?? Oturum yönetimi için express-session kütüphanesini Passportjs ile entegre eder.
+  app.use(passport.session());
 
   await app.listen(3000);
 }
